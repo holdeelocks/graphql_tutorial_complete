@@ -6,7 +6,7 @@ import { ApolloProvider } from "react-apollo";
 import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { AUTH_TOKEN } from "./constants";
 import { setContext } from "apollo-link-context";
 import { split } from "apollo-link";
@@ -52,10 +52,10 @@ const client = new ApolloClient({
 });
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router>
     <ApolloProvider client={client}>
       <App />
     </ApolloProvider>
-  </BrowserRouter>,
+  </Router>,
   document.getElementById("root")
 );

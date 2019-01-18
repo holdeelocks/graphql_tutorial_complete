@@ -44,7 +44,11 @@ class CreateLink extends Component {
             placeholder="Url for the link"
           />
         </div>
-        <Mutation mutation={POST_MUTATION} variable={{ description, url }}>
+        <Mutation
+          mutation={POST_MUTATION}
+          variable={{ description, url }}
+          onCompleted={() => this.props.history.push("/")}
+        >
           {postMutation => {
             return <button onClick={postMutation}>Submit</button>;
           }}
