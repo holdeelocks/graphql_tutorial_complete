@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "graphql-yoga": "^1.17.0",
     "jsonwebtoken": "^8.4.0",
     "prisma-client-lib": "^1.24.0"
