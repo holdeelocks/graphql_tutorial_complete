@@ -21,6 +21,12 @@ async function feed(parent, args, context) {
   };
 }
 
+async function findById(parent, args, context, info) {
+  const link = await context.prisma.link({ id: args.id });
+  return link;
+}
+
 module.exports = {
-  feed
+  feed,
+  findById
 };
