@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { APP_SECRET, getUserId } = require("../utils");
 
-function post(parent, args, context) {
+function postLink(parent, args, context) {
   const userId = getUserId(context);
   return context.prisma.createLink({
     url: args.url,
@@ -12,10 +12,15 @@ function post(parent, args, context) {
 }
 
 function updateLink(parent, args, context, info) {
+  const userId = getUserId(context);
   return context.prisma.updateLink(
     {
       where: { id: args.linkId },
-      data: { description: args.description, url: args.url }
+      data: {
+        description: args.description,
+        url: args.url,
+        postedBy: { connect: { id: userId } }
+      }
     },
     info
   );
@@ -27,7 +32,7 @@ async function removeLink(parent, args, context, info) {
 }
 
 async function removeManyLinks(parent, args, context, info) {
-  const removedLinks = await context.prisma.deleteManyLinks({ url_contains: args.url });
+  const removedLinks = await context.prisma.deleteManyLinks({ url_contains: args.url }, info);
   return removedLinks;
 }
 
@@ -82,7 +87,7 @@ async function vote(parent, args, context, info) {
 module.exports = {
   signup,
   login,
-  post,
+  postLink,
   updateLink,
   vote,
   removeLink,
