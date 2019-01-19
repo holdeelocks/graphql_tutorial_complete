@@ -26,6 +26,11 @@ async function removeLink(parent, args, context, info) {
   return removed;
 }
 
+async function removeManyLinks(parent, args, context, info) {
+  const removedLinks = await context.prisma.deleteManyLinks({ url_contains: args.url });
+  return removedLinks;
+}
+
 async function signup(parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10);
 
@@ -80,5 +85,6 @@ module.exports = {
   post,
   updateLink,
   vote,
-  removeLink
+  removeLink,
+  removeManyLinks
 };

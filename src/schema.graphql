@@ -27,6 +27,7 @@ type Mutation {
   vote(linkId: ID!): Vote!
   updateLink(url: String, description: String, linkId: String!): Link!
   removeLink(linkId: String!): Link
+  removeManyLinks(url: String!): Object
 }
 
 type Subscription {
@@ -37,6 +38,10 @@ type Subscription {
 type AuthPayload {
   token: String
   user: User
+}
+
+type Object {
+  count: Int
 }
 
 type User {
