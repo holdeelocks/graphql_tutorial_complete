@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import { FEED_QUERY } from "./LinkList";
+import { LINKS_PER_PAGE } from "../constants";
 
 const POST_MUTATION = gql`
-  mutation PostMutation($url: String!, $description: String) {
-    post(url: $url, description: $description) {
+  mutation PostMutation($description: String!, $url: String!) {
+    post(description: $description, url: $url) {
       id
+      createdAt
       url
       description
     }
@@ -18,10 +21,6 @@ class CreateLink extends Component {
     url: ""
   };
 
-  // handleChange = ({ target: { name, value } }) => {
-  //   this.setState({ [name]: value });
-  // };
-
   render() {
     const { description, url } = this.state;
     return (
@@ -32,7 +31,6 @@ class CreateLink extends Component {
             value={description}
             onChange={e => this.setState({ description: e.target.value })}
             type="text"
-            name="description"
             placeholder="A description for the link"
           />
           <input
@@ -40,19 +38,30 @@ class CreateLink extends Component {
             value={url}
             onChange={e => this.setState({ url: e.target.value })}
             type="text"
-            name="url"
-            placeholder="Url for the link"
+            placeholder="The URL for the link"
           />
         </div>
         <Mutation
           mutation={POST_MUTATION}
-          variable={{ description, url }}
-          onCompleted={() => this.props.history.push("/")}
-          errorPolicy="all"
-        >
-          {postMutation => {
-            return <button onClick={postMutation}>Submit</button>;
+          variables={{ description, url }}
+          onCompleted={() => this.props.history.push("/new/1")}
+          update={(store, { data: { post } }) => {
+            const first = LINKS_PER_PAGE;
+            const skip = 0;
+            const orderBy = "createdAt_DESC";
+            const data = store.readQuery({
+              query: FEED_QUERY,
+              variables: { first, skip, orderBy }
+            });
+            data.feed.links.unshift(post);
+            store.writeQuery({
+              query: FEED_QUERY,
+              data,
+              variables: { first, skip, orderBy }
+            });
           }}
+        >
+          {postMutation => <button onClick={postMutation}>Submit</button>}
         </Mutation>
       </div>
     );
