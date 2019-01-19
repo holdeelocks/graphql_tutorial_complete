@@ -29,13 +29,13 @@ function info(parents, args, context, info) {
   return "This is the API of a Hackernews Clone";
 }
 
-function findById(parents, args, context, info) {
-  let links = context.prisma.links;
-  return links.find(link => link.id === args.id);
-}
+// function findById(parents, args, context, info) {
+//   let links = context.prisma.links;
+//   return links.find(link => link.id === args.id);
+// }
 
 module.exports = {
   feed,
-  info,
-  findById
+  info
+  // findById
 };

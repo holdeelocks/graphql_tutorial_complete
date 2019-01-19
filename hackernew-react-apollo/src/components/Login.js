@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { AUTH_TOKEN } from "../constants";
-import gql from "gql-tag";
+import { Mutation } from "react-apollo";
+import gql from "graphql-tag";
 
 const SIGNUP_MUTATION = gql`
   mutation SignupMutation($email: String!, $password: String!, $name: String!) {
@@ -25,8 +26,18 @@ class Login extends Component {
     name: ""
   };
 
-  handleChange = ({ target: name, value }) => {
+  handleChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
+  };
+
+  _saveUserData = token => {
+    localStorage.setItem(AUTH_TOKEN, token);
+  };
+
+  _confirm = async data => {
+    const { token } = this.state.login ? data.login : data.signup;
+    this._saveUserData(token);
+    this.props.history.push(`/`);
   };
 
   render() {
@@ -60,9 +71,17 @@ class Login extends Component {
           />
         </div>
         <div className="flex mt3">
-          <div className="pointer mr2 button" onClick={() => this._confirm()}>
-            {login ? "login" : "create account"}
-          </div>
+          <Mutation
+            mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
+            variables={{ email, password, name }}
+            onCompleted={data => this._confirm(data)}
+          >
+            {mutation => (
+              <div className="pointer mr2 button" onClick={mutation}>
+                {login ? "login" : "create account"}
+              </div>
+            )}
+          </Mutation>
           <div className="pointer button" onClick={() => this.setState({ login: !login })}>
             {login ? "need to create an account?" : "already have an account?"}
           </div>
@@ -71,11 +90,5 @@ class Login extends Component {
     );
   }
 }
-
-const _confirm = async () => {};
-
-const _saveUserData = token => {
-  localStorage.setItem(AUTH_TOKEN, token);
-};
 
 export default Login;

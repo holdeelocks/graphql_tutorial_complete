@@ -16,7 +16,7 @@ class Header extends Component {
           {authToken && (
             <div className="flex">
               <div className="mli">|</div>
-              <Link to="/create" classname="mli no-underline black">
+              <Link to="/create" className="mli no-underline black">
                 submit
               </Link>
             </div>

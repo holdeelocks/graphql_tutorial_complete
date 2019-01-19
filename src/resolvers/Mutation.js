@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { APP_SECRET, getUserId } = require("../utils");
 
-function post(parent, args, context, info) {
+function post(parent, args, context) {
   const userId = getUserId(context);
   return context.prisma.createLink({
     url: args.url,
@@ -11,17 +11,17 @@ function post(parent, args, context, info) {
   });
 }
 
-function updateLink(parent, args, context, info) {
-  let links = context.prisma.links;
-  const index = links.findIndex(link => link.id === args.id);
-  if (args.url) {
-    links[index].url = args.url;
-  }
-  if (args.description) {
-    links[index].description = args.description;
-  }
-  return links[index];
-}
+// function updateLink(parent, args, context, info) {
+//   let links = context.prisma.links;
+//   const index = links.findIndex(link => link.id === args.id);
+//   if (args.url) {
+//     links[index].url = args.url;
+//   }
+//   if (args.description) {
+//     links[index].description = args.description;
+//   }
+//   return links[index];
+// }
 
 async function signup(parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10);
@@ -75,6 +75,6 @@ module.exports = {
   signup,
   login,
   post,
-  updateLink,
+  // updateLink,
   vote
 };
