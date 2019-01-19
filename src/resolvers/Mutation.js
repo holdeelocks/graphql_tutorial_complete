@@ -11,17 +11,20 @@ function post(parent, args, context) {
   });
 }
 
-// function updateLink(parent, args, context, info) {
-//   let links = context.prisma.links;
-//   const index = links.findIndex(link => link.id === args.id);
-//   if (args.url) {
-//     links[index].url = args.url;
-//   }
-//   if (args.description) {
-//     links[index].description = args.description;
-//   }
-//   return links[index];
-// }
+function updateLink(parent, args, context, info) {
+  return context.prisma.updateLink(
+    {
+      where: { id: args.linkId },
+      data: { description: args.description, url: args.url }
+    },
+    info
+  );
+}
+
+async function removeLink(parent, args, context, info) {
+  const removed = await context.prisma.deleteLink({ id: args.linkId }, info);
+  return removed;
+}
 
 async function signup(parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10);
@@ -75,6 +78,7 @@ module.exports = {
   signup,
   login,
   post,
-  // updateLink,
-  vote
+  updateLink,
+  vote,
+  removeLink
 };
